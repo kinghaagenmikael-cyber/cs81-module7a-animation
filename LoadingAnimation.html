@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <!-- The title appears in the browser tab -->
+  <title>Loading Animation Simulator</title>
+</head>
+
+<!-- 
+  this Div Sets font, alignment, spacing, and background color.
+  This helps emphasize the animation as it runs.
+-->
+<body style="font-family: monospace; text-align: center; padding-top: 100px; background-color: #f4f4f4;">
+
+  <!-- 
+    This div shows the animated loading symbol.
+    It is updated using JavaScript.
+  -->
+  <div id="loader" style="font-size: 2rem; margin-bottom: 20px;">
+    Loading...
+  </div>
+
+  <!-- 
+    This div displays text status messages.
+    JavaScript changes its content as the animation progresses.
+  -->
+  <div id="status">Please wait</div>
+
+  <script>
+    /*
+      This function controls the loading animation.
+      It uses setInterval to update the page over time.
+    */
+    function runLoadingAnimation() {
+
+      // Grab the loader div using its unique ID
+      const loader = document.getElementById("loader");
+
+      // Grab the status text element
+      const status = document.getElementById("status");
+
+      /*
+        Frames array represents each visual "step" of the animation.
+        Cycling through this array creates the illusion of motion.
+      */
+      const frames = ["⏳", "⌛", ".", "..", "..."];
+
+      // Tracks which frame should display next
+      let index = 0;
+
+      // Counts how many animation cycles have completed
+      let cycleCount = 0;
+
+      // Limits how long the animation runs
+      const maxCycles = 10;
+
+      /*
+        setInterval runs this function every 500 milliseconds.
+        This is asynchronous: the browser continues doing other work
+        while waiting between updates.
+      */
+      const interval = setInterval(() => {
+
+        // Update the loader content using the current frame
+        loader.textContent = frames[index % frames.length];
+
+        // Move to the next frame
+        index++;
+
+        /*
+          Every time the fram finishes a new cycle starts 
+
+        */
+        if (index % frames.length === 0) {
+          cycleCount++;
+          status.textContent = "Loading cycle " + cycleCount + "...";
+        }
+
+        /*
+          Once we reach the maximum number of cycles,
+          clearInterval stops the asynchronous loop.
+        */
+        if (cycleCount >= maxCycles) {
+          clearInterval(interval);
+
+          // Final visual update when loading completes
+          loader.textContent = "✅";
+          status.textContent = "Done!";
+
+          // NEW FEATURE: background color changes on completion
+          document.body.style.backgroundColor = "#d4edda";
+        }
+
+      }, 500); // Delay in milliseconds
+    }
+
+    /*
+      This starts the animation once the page loads.
+      Without calling this function, the animation wouldnt load.
+    */
+    runLoadingAnimation();
+
+    /*
+      CREATIVE IDEA:
+      I could maybe add a sound effects or music that starts with the animation
+      and stops when clearInterval() is called.
+    */
+  </script>
+
+</body>
+</html>
